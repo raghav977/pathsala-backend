@@ -9,7 +9,11 @@ from rest_framework.permissions import AllowAny
 from .serializers import UserSerializer
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from dotenv import load_dotenv
 User = get_user_model()
+import os
+load_dotenv()
+GOOGLE_CLIENT_ID = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 class GoogleAuthView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -21,7 +25,7 @@ class GoogleAuthView(APIView):
             # Verify token
             request_adapter = google.auth.transport.requests.Request()
             idinfo = google.oauth2.id_token.verify_oauth2_token(
-                id_token, request_adapter, audience="337899844345-5qrjsjkrgs9cibgr3sdc4o9rmm1t5arv.apps.googleusercontent.com"
+                id_token, request_adapter, audience=GOOGLE_CLIENT_ID
             )
 
             email = idinfo.get('email')
